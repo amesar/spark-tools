@@ -37,11 +37,11 @@ object ShowCreateTableAsSql {
     @Parameter(names = Array("-o", "--outputFile" ), description = "outputFile", required=false)
     var outputFile : String = _
 
-    @Parameter(names = Array("--manyLines" ), description = "manyLines", required=false)
-    var manyLines = false
-
     @Parameter(names = Array("--dropTable" ), description = "dropTable", required=false)
     var dropTable = false
+
+    @Parameter(names = Array("--manyLines" ), description = "manyLines", required=false)
+    var manyLines = false
   }
 
   def display(opts: Options) {

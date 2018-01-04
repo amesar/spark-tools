@@ -4,13 +4,14 @@ Useful Spark tools.
 
 ## Summary
 
-* DatabaseReport - List table details for specified databases
-* DescribeTable - Executes Spark SQL 'describe extended $table' for specified tables
-* ShowCreateTableAsSql - Execute Spark SQL 'show create $table' for specified tables
+* DatabaseReport - Executes "spark.catalog.listTables(database)"
+* DescribeTable - Executes Spark SQL "describe extended $table" for specified tables.
+* ShowCreateTableAsSql - Execute Spark SQL "show create $table" for specified tables and output SQL/DDL code.
+* ShowCreateTableAsScala - Execute Spark SQL "show create $table" for specified tables and output a Scala code.
 
 ## Details
 
-### org.amm.spark.sql.report.DatabaseReport`
+### DatabaseReport
 
 #### Example
 ```
@@ -42,7 +43,7 @@ Database tpcds
 | databases | List of comma-separated databases. If not specified all databases will be generated. | No | | tpcds,tpch |
 | showSparkConfig | Display Spark Config | No | false | <br> |
 
-### org.amm.spark.sql.report.DescribeTable
+### DescribeTable
 
 #### Example
 ```
@@ -103,7 +104,7 @@ Table tpcds.store
 
 
 
-### org.amm.spark.sql.report.ShowCreateTableAsSql`
+### ShowCreateTableAsSql
 
 #### Example
 ```
@@ -126,11 +127,46 @@ OPTIONS (
 
 #### Options
 
-| Property        | Description  | Required | Default| SampleValue |
+| Property        | Description  | Required | Default| Sample Value |
 |-----------------|--------|----------|----|---|
 | database | Database name | Yes | | tpcds |
 | tables | List of comma-separated tables. If not specified all tables will be generated. | No | | customer,store |
 | outputFile | Send output to file instead of stdout | No | | create_tpcds.ddl |
 | dropTable | Generate drop table statement | No | false | drop table if exists tpcds.customer |
 | oneLine | Output is one line | No | false | |
+
+### ShowCreateTableAsScala
+
+#### Example
+```
+spark-submit --class org.amm.spark.sql.report.ShowCreateTableAsScala --master local[2] \
+  target/amm-spark-tools-1.0-SNAPSHOT.jar \
+  --database tpcds \
+  --tables customer \
+  --outputFile gen_src/org/myorg/spark/CreateTpcds.scala \
+  --dropTable \
+  --package org.myorg.spark
+
+cat gen_src/org/myorg/spark/CreateTpcds.scala 
+
+package org.myorg.spark
+import org.apache.spark.sql.SparkSession
+
+object CreateTpcds {
+  def generateDDL(spark: SparkSession) {
+    spark.sql("drop table if exists tpcds.customer")
+    spark.sql("CREATE TABLE `tpcds`.`customer` (`c_customer_sk` BIGINT, `c_customer_id` STRING, `c_current_cdemo_sk` BIGINT, `c_current_hdemo_sk` BIGINT, `c_current_addr_sk` BIGINT, `c_first_shipto_date_sk` BIGINT, `c_first_sales_date_sk` BIGINT, `c_salutation` STRING, `c_first_name` STRING, `c_last_name` STRING, `c_preferred_cust_flag` STRING, `c_birth_day` INT, `c_birth_month` INT, `c_birth_year` INT, `c_birth_country` STRING, `c_login` STRING, `c_email_address` STRING, `c_last_review_date` STRING) USING CSV OPTIONS (   `delimiter` '|',   `header` 'false',   `serialization.format` '1',   path 'file:/opt/tables/tpcds/customer' ) ")
+}
+
+```
+
+#### Options
+
+| Property        | Description  | Required | Default| Sample Value |
+|-----------------|--------|----------|----|---|
+| database | Database name | Yes | | tpcds |
+| tables | List of comma-separated tables. If not specified all tables will be generated. | No | | customer,store |
+| outputFile | Send output to file instead of stdout | No | | gen/CreateTpcds.scala |
+| dropTable | Generate drop table statement | No | false | spark.sql("drop table if exists tpcds.customer") |
+| package | Package name| No | | org.myorg.spark |
 

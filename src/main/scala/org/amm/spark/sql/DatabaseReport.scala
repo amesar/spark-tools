@@ -26,7 +26,6 @@ object DatabaseReport {
     df.show(1000,false)
     for (database <- df.select("name").collect.map(_.getString(0))) {
        if (desiredDatabases.size == 0 || desiredDatabases.contains(database)) {
-         //System.err.println(s"Database $database")
          println(s"Database $database")
          val df = spark.catalog.listTables(database)
          df.show(100000,false)
