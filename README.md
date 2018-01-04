@@ -12,6 +12,7 @@ Scala tools:
 
 ### org.amm.spark.sql.report.DatabaseReport`
 
+#### Example
 ```
 spark-submit --class org.amm.spark.sql.report.DatabaseReport \
   --master local[2] \
@@ -34,3 +35,11 @@ Database tpcds
 |store                            |tpcds   |null       |EXTERNAL |false      |
 +---------------------------------+--------+-----------+---------+-----------+
 ```
+
+#### Options
+
+| Property        | Description  | Required | Default Value | Sample Value |
+|-----------------|--------|----------|----|
+| databases | List of comma-separated tables. If not specified all tables will be generated. | No | | tpcds,tpch |
+| showSparkConfig | Display Spark Config | No | false | <br> |
+
