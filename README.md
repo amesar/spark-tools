@@ -39,7 +39,7 @@ Database tpcds
 #### Options
 
 | Property        | Description  | Required | Default Value | Sample Value |
-|-----------------|--------|----------|----|
+|-----------------|--------|----------|----|---|
 | databases | List of comma-separated tables. If not specified all tables will be generated. | No | | tpcds,tpch |
 | showSparkConfig | Display Spark Config | No | false | <br> |
 
