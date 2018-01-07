@@ -4,10 +4,11 @@ Useful Spark tools.
 
 ## Summary
 
-* DatabaseReport - Executes "spark.catalog.listTables(database)"
+* DatabaseReport - Executes "spark.catalog.listTables($database)"
 * DescribeTable - Executes Spark SQL "describe extended $table" for specified tables.
 * ShowCreateTableAsSql - Execute Spark SQL "show create $table" for specified tables and output SQL/DDL code.
-* ShowCreateTableAsScala - Execute Spark SQL "show create $table" for specified tables and output a Scala code.
+* ShowCreateTableAsScala - Execute Spark SQL "show create $table" for specified tables and output Scala code.
+* ListTableColumns - Executes spark.catalog.listColumns($table)
 
 ## Details
 
@@ -171,3 +172,43 @@ object CreateTpcds {
 | dropTable | Generate drop table statement | No | false | spark.sql("drop table if exists tpcds.customer") |
 | package | Package name| No | | org.myorg.spark |
 
+### ListTableColumns
+
+#### Example
+```
+spark-submit --class org.amm.spark.sql.report.ListTableColumns --master local[2] \
+  target/amm-spark-tools-1.0-SNAPSHOT.jar \
+  --database tpcds \
+  --tables customer \
+
+Table tpcds.customer_part
++----------------------+-----------+--------+--------+-----------+--------+
+|name                  |description|dataType|nullable|isPartition|isBucket|
++----------------------+-----------+--------+--------+-----------+--------+
+|c_customer_sk         |null       |bigint  |true    |false      |false   |
+|c_customer_id         |null       |string  |true    |false      |false   |
+|c_current_cdemo_sk    |null       |bigint  |true    |false      |false   |
+|c_current_hdemo_sk    |null       |bigint  |true    |false      |false   |
+|c_current_addr_sk     |null       |bigint  |true    |false      |false   |
+|c_first_shipto_date_sk|null       |bigint  |true    |false      |false   |
+|c_first_sales_date_sk |null       |bigint  |true    |false      |false   |
+|c_salutation          |null       |string  |true    |false      |false   |
+|c_first_name          |null       |string  |true    |false      |false   |
+|c_last_name           |null       |string  |true    |false      |false   |
+|c_preferred_cust_flag |null       |string  |true    |false      |false   |
+|c_birth_day           |null       |int     |true    |false      |false   |
+|c_birth_year          |null       |int     |true    |false      |false   |
+|c_birth_country       |null       |string  |true    |false      |false   |
+|c_login               |null       |string  |true    |false      |false   |
+|c_email_address       |null       |string  |true    |false      |false   |
+|c_last_review_date    |null       |string  |true    |false      |false   |
+|c_birth_month         |null       |int     |true    |true       |false   |
++----------------------+-----------+--------+--------+-----------+--------+
+```
+
+#### Options
+
+| Property        | Description  | Required | Default| Sample Value |
+|-----------------|--------|----------|----|---|
+| database | Database name | Yes | | tpcds |
+| tables | List of comma-separated tables. If not specified all tables will be generated. | No | | customer,store |
