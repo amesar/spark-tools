@@ -179,7 +179,7 @@ object CreateTpcds {
 spark-submit --class org.amm.spark.sql.report.ListTableColumns --master local[2] \
   target/amm-spark-tools-1.0-SNAPSHOT.jar \
   --database tpcds \
-  --tables customer \
+  --tables customer_part \
 
 Table tpcds.customer_part
 +----------------------+-----------+--------+--------+-----------+--------+
