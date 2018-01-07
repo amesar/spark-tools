@@ -19,13 +19,15 @@ object ShowCreateTableAsScala {
   def process(spark: SparkSession, database: String, desiredTables: Seq[String] = Seq.empty, outputFile: String = null, dropTable: Boolean = false, pkg: String = null) {
     val out = if (outputFile == null) System.out else new FileOutputStream(outputFile)
     val className = if (outputFile == null) s"$database.scala" else (new File(outputFile)).getName.replace(".scala","")
+    val tables = if (desiredTables.size > 0) desiredTables else CommonUtils.getTableNames(spark,database)
     new PrintWriter(out) {
       if (pkg != null)
         println(s"package ${pkg}\n")
       println("import org.apache.spark.sql.SparkSession")
       println(s"\nobject ${className} {")
       println("  def generateDDL(spark: SparkSession) {")
-      for (table <- desiredTables) {
+
+      for (table <- tables) {
 	val tableName = s"${database}.$table"
         System.err.println(s"Processing $tableName")
         val df = spark.sql(s"show create table $tableName")

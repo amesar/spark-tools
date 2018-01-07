@@ -15,9 +15,10 @@ object ShowCreateTableAsSql {
 
   def process(spark: SparkSession, database: String, desiredTables: Seq[String] = Seq.empty, outputFile: String = null, manyLines: Boolean = false, dropTable: Boolean = false) {
     val out = if (outputFile == null) System.out else new FileOutputStream(outputFile)
+    val tables = if (desiredTables.size > 0) desiredTables else CommonUtils.getTableNames(spark,database)
 
     new PrintWriter(out) {
-      for (table <- desiredTables) {
+      for (table <- tables) {
 	val tableName = s"${database}.$table"
         System.err.println(s"Processing $tableName")
         if (dropTable) println(s"DROP TABLE IF EXISTS ${tableName};")
