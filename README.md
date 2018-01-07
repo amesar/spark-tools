@@ -17,7 +17,8 @@ Useful Spark tools.
 ```
 spark-submit --class org.amm.spark.sql.report.DatabaseReport --master local[2] \
   target/amm-spark-tools-1.0-SNAPSHOT.jar \
-  --databases tpcds
+  --databases tpcds \
+  --showTables
 
 Databases
 +-------+---------------------+---------------------------------------------------------+
@@ -40,7 +41,8 @@ Database tpcds
 | Property        | Description  | Required | Default| Sample Value |
 |-----------------|--------|----------|----|---|
 | databases | List of comma-separated databases. If not specified all databases will be generated. | No | | tpcds,tpch |
-| showSparkConfig | Display Spark Config | No | false | <br> |
+| showTables | Show tables for each database | No | false | <br> |
+| showSparkConfig | Show Spark Config | No | false | <br> |
 
 ### DescribeTable
 

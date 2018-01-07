@@ -11,10 +11,10 @@ object DatabaseReport {
     display(opts)
     val spark = SparkSession.builder().appName("DatabaseReport").enableHiveSupport().getOrCreate()
     val databases = CommonUtils.split(opts.databases)
-    process(spark, databases, opts.showSparkConfig)
+    process(spark, databases, opts.showTables, opts.showSparkConfig)
   }
 
-  def process(spark: SparkSession, desiredDatabases: Seq[String] = Seq.empty, showSparkConfig: Boolean = false) {
+  def process(spark: SparkSession, desiredDatabases: Seq[String] = Seq.empty, showTables: Boolean = false, showSparkConfig: Boolean = false) {
     import spark.implicits._
     if (showSparkConfig) {
       println("SparkConfig")
@@ -26,10 +26,13 @@ object DatabaseReport {
     val df0 = spark.catalog.listDatabases()
     val df = if (desiredDatabases.size == 0) df0 else df0.filter($"name".isin(desiredDatabases: _*))
     df.show(1000,false)
-    for (database <- df.select("name").collect.map(_.getString(0))) {
-       println(s"Database $database")
-       val df = spark.catalog.listTables(database)
-       df.show(100000,false)
+
+    if (showTables) {
+      for (database <- df.select("name").collect.map(_.getString(0))) {
+        println(s"Database $database")
+        val df = spark.catalog.listTables(database)
+        df.show(100000,false)
+      }
     }
   }
 
@@ -37,13 +40,17 @@ object DatabaseReport {
     @Parameter(names = Array("-d", "--databases" ), description = "Databases", required=false)
     var databases = ""
 
-    @Parameter(names = Array("-s", "--showSparkConfig" ), description = "Show Spark config", required=false)
+    @Parameter(names = Array("-t", "--showTables" ), description = "Show tables for each database", required=false)
+    var showTables = false
+
+    @Parameter(names = Array("-c", "--showSparkConfig" ), description = "Show Spark config", required=false)
     var showSparkConfig = false
   }
 
   def display(opts: Options) {
     println("Options:")
     println(s"  databases: ${opts.databases}")
+    println(s"  showTables: ${opts.showTables}")
     println(s"  showSparkConfig: ${opts.showSparkConfig}")
   }
 }
