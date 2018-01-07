@@ -15,6 +15,7 @@ object DatabaseReport {
   }
 
   def process(spark: SparkSession, desiredDatabases: Seq[String] = Seq.empty, showSparkConfig: Boolean = false) {
+    import spark.implicits._
     if (showSparkConfig) {
       println("SparkConfig")
       for ((k,v) <- spark.conf.getAll) println(s"  $k: $v")
@@ -22,14 +23,13 @@ object DatabaseReport {
 
     println()
     println("Databases")
-    val df = spark.catalog.listDatabases()
+    val df0 = spark.catalog.listDatabases()
+    val df = if (desiredDatabases.size == 0) df0 else df0.filter($"name".isin(desiredDatabases: _*))
     df.show(1000,false)
     for (database <- df.select("name").collect.map(_.getString(0))) {
-       if (desiredDatabases.size == 0 || desiredDatabases.contains(database)) {
-         println(s"Database $database")
-         val df = spark.catalog.listTables(database)
-         df.show(100000,false)
-      }
+       println(s"Database $database")
+       val df = spark.catalog.listTables(database)
+       df.show(100000,false)
     }
   }
 
