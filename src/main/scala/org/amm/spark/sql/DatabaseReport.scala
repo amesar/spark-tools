@@ -5,11 +5,16 @@ import com.beust.jcommander.{JCommander, Parameter}
 import java.io.{PrintStream,FileOutputStream,PrintWriter}
 
 object DatabaseReport {
+
   def main(args: Array[String]) {
+    val spark = SparkSession.builder().appName("DatabaseReport").enableHiveSupport().getOrCreate()
+    main2(spark, args)
+  }
+
+  def main2(spark: SparkSession, args: Array[String]) {
     val opts = new Options()
     new JCommander(opts, args.toArray: _*)
     display(opts)
-    val spark = SparkSession.builder().appName("DatabaseReport").enableHiveSupport().getOrCreate()
     val databases = CommonUtils.split(opts.databases)
     process(spark, databases, opts.showTables, opts.showSparkConfig)
   }

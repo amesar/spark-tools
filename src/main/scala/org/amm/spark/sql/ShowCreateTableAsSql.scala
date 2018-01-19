@@ -5,11 +5,16 @@ import java.io.{PrintStream,FileOutputStream,PrintWriter}
 import com.beust.jcommander.{JCommander, Parameter}
 
 object ShowCreateTableAsSql {
+
   def main(args: Array[String]) {
+    val spark = SparkSession.builder().appName("ShowCreateTableAsSql").enableHiveSupport().getOrCreate()
+    main2(spark, args)
+  }
+
+  def main2(spark: SparkSession, args: Array[String]) {
     val opts = new Options()
     new JCommander(opts, args.toArray: _*)
     display(opts)
-    val spark = SparkSession.builder().appName("ShowCreateTableAsSql").enableHiveSupport().getOrCreate()
     process(spark, opts.database, opts.tableList, opts.outputFile, opts.manyLines, opts.dropTable)
   }
 

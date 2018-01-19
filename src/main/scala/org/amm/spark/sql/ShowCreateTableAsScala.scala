@@ -8,11 +8,16 @@ import com.beust.jcommander.{JCommander, Parameter}
  * Generate Scala file to create database tables from "show create table".
  */
 object ShowCreateTableAsScala {
+
   def main(args: Array[String]) {
+    val spark = SparkSession.builder().appName("ShowCreateTableAsScala").enableHiveSupport().getOrCreate()
+    main2(spark, args)
+  }
+
+  def main2(spark: SparkSession, args: Array[String]) {
     val opts = new Options()
     new JCommander(opts, args.toArray: _*)
     display(opts)
-    val spark = SparkSession.builder().appName("ShowCreateTableAsScala").enableHiveSupport().getOrCreate()
     process(spark, opts.database, opts.tableList, opts.outputFile, opts.dropTable, opts.pkg)
   }
 

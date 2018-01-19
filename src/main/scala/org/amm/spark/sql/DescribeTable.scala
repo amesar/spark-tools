@@ -6,10 +6,14 @@ import com.beust.jcommander.{JCommander, Parameter}
 object DescribeTable {
 
   def main(args: Array[String]) {
+    val spark = SparkSession.builder().appName("DescribeTable").enableHiveSupport().getOrCreate()
+    main2(spark, args)
+  }
+
+  def main2(spark: SparkSession, args: Array[String]) {
     val opts = new BaseOptions()
     new JCommander(opts, args.toArray: _*)
     display(opts)
-    val spark = SparkSession.builder().appName("DescribeTable").enableHiveSupport().getOrCreate()
     process(spark, opts.database, opts.tableList)
   }
 
