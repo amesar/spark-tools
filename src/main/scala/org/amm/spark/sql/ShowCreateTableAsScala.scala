@@ -32,13 +32,14 @@ object ShowCreateTableAsScala {
       println(s"\nobject ${className} {")
       println("  def generateDDL(spark: SparkSession) {")
 
+      spark.sql(s"use $database")
       for (table <- tables) {
-	val tableName = s"${database}.$table"
-        System.err.println(s"Processing $tableName")
-        val df = spark.sql(s"show create table $tableName")
+	val tablePath = s"${database}.$table"
+        System.err.println(s"Processing $tablePath")
+        val df = spark.sql(s"show create table $table")
         val ddl = df.collect.map(_.getString(0))
         for (line <- ddl) {
-          if (dropTable) println("    "+mkSql(s"drop table if exists $tableName"))
+          if (dropTable) println("    "+mkSql(s"drop table if exists $table"))
           println("    "+mkSql(line.replace("\n"," ")))
           if (dropTable) println()
         }

@@ -117,7 +117,7 @@ spark-submit --class org.amm.spark.sql.report.ShowCreateTableAsSql --master loca
   --dropTable
 
 DROP TABLE IF EXISTS tpcds.customer;
-CREATE TABLE `tpcds`.`customer` (`c_customer_sk` BIGINT, `c_customer_id` STRING, `c_current_cdemo_sk` BIGINT, `c_current_hdemo_sk` BIGINT, `c_current_addr_sk` BIGINT, `c_first_shipto_date_sk` BIGINT, `c_first_sales_date_sk` BIGINT, `c_salutation` STRING, `c_first_name` STRING, `c_last_name` STRING, `c_preferred_cust_flag` STRING, `c_birth_day` INT, `c_birth_month` INT, `c_birth_year` INT, `c_birth_country` STRING, `c_login` STRING, `c_email_address` STRING, `c_last_review_date` STRING)
+CREATE TABLE `customer` (`c_customer_sk` BIGINT, `c_customer_id` STRING, `c_current_cdemo_sk` BIGINT, `c_current_hdemo_sk` BIGINT, `c_current_addr_sk` BIGINT, `c_first_shipto_date_sk` BIGINT, `c_first_sales_date_sk` BIGINT, `c_salutation` STRING, `c_first_name` STRING, `c_last_name` STRING, `c_preferred_cust_flag` STRING, `c_birth_day` INT, `c_birth_month` INT, `c_birth_year` INT, `c_birth_country` STRING, `c_login` STRING, `c_email_address` STRING, `c_last_review_date` STRING)
 USING CSV
 OPTIONS (
   `delimiter` '|',
@@ -157,7 +157,7 @@ import org.apache.spark.sql.SparkSession
 object CreateTpcds {
   def generateDDL(spark: SparkSession) {
     spark.sql("drop table if exists tpcds.customer")
-    spark.sql("CREATE TABLE `tpcds`.`customer` (`c_customer_sk` BIGINT, `c_customer_id` STRING, `c_current_cdemo_sk` BIGINT, `c_current_hdemo_sk` BIGINT, `c_current_addr_sk` BIGINT, `c_first_shipto_date_sk` BIGINT, `c_first_sales_date_sk` BIGINT, `c_salutation` STRING, `c_first_name` STRING, `c_last_name` STRING, `c_preferred_cust_flag` STRING, `c_birth_day` INT, `c_birth_month` INT, `c_birth_year` INT, `c_birth_country` STRING, `c_login` STRING, `c_email_address` STRING, `c_last_review_date` STRING) USING CSV OPTIONS (   `delimiter` '|',   `header` 'false',   `serialization.format` '1',   path 'file:/opt/tables/tpcds/customer' ) ")
+    spark.sql("CREATE TABLE `customer` (`c_customer_sk` BIGINT, `c_customer_id` STRING, `c_current_cdemo_sk` BIGINT, `c_current_hdemo_sk` BIGINT, `c_current_addr_sk` BIGINT, `c_first_shipto_date_sk` BIGINT, `c_first_sales_date_sk` BIGINT, `c_salutation` STRING, `c_first_name` STRING, `c_last_name` STRING, `c_preferred_cust_flag` STRING, `c_birth_day` INT, `c_birth_month` INT, `c_birth_year` INT, `c_birth_country` STRING, `c_login` STRING, `c_email_address` STRING, `c_last_review_date` STRING) USING CSV OPTIONS (   `delimiter` '|',   `header` 'false',   `serialization.format` '1',   path 'file:/opt/tables/tpcds/customer' ) ")
 }
 
 ```

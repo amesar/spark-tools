@@ -23,11 +23,12 @@ object ShowCreateTableAsSql {
     val tables = if (desiredTables.size > 0) desiredTables else CommonUtils.getTableNames(spark,database)
 
     new PrintWriter(out) {
+      spark.sql(s"use $database")
       for (table <- tables) {
-	val tableName = s"${database}.$table"
-        System.err.println(s"Processing $tableName")
-        if (dropTable) println(s"DROP TABLE IF EXISTS ${tableName};")
-        val df = spark.sql(s"show create table $tableName")
+	val tablePath = s"${database}.$table"
+        System.err.println(s"Processing $tablePath")
+        if (dropTable) println(s"DROP TABLE IF EXISTS ${table};")
+        val df = spark.sql(s"show create table $table")
         val ddl = df.collect.map(_.getString(0))
         for (line <- ddl) {
           val content = if (manyLines) line else line.replace("\n"," ")
